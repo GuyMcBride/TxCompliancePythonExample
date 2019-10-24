@@ -85,7 +85,7 @@ def SimpleMessageEventHandler(source, args):
     elif args.Message.find("All selected tests completed") >= 0:
         args.Response = Forms.DialogResult.OK
     else:
-        function_invoker.Execute(InvokeMessageNotHandled, args, availableTests[0])
+        function_invoker.Execute(InvokeMessageNotHandled, args, currentTest)
         args.Response = Forms.DialogResult.Cancel
 
     print("Callback handler completed")
@@ -103,7 +103,9 @@ try:
     availableTests = remoteApp.GetCurrentOptions("TestsInfo")
     for test in availableTests:
         print(test)
-    remoteApp.SelectedTests = [availableTests[0].ID] 
+    currentTest = availableTests[1].ID
+    print("Testing: {}".format(currentTest))
+    remoteApp.SelectedTests = [currentTest] 
 
     # Start the run in a worker thread to enable the program to proceed to the next statement
     threading.Thread(target=Run, args=(remoteApp,eventSink,)).start()
